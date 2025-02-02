@@ -9,4 +9,7 @@ public class TravelCalculatePremiumResponse {
     private Date agreementDateFrom;
     private Date agreementDateTo;
 
+
+
+
 }
