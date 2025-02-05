@@ -6,16 +6,16 @@ public class TravelCalculatePremiumRequest {
 
     private String personFirstName;
     private String personLastName;
-    private Date agreementDateFrom;
-    private Date agreementDateTo;
+    private LocalDate agreementDateFrom;
+    private LocalDate agreementDateTo;
 
 
     public TravelCalculatePremiumRequest() { }
 
     public TravelCalculatePremiumRequest(String personFirstName,
                                          String personLastName,
-                                         Date agreementDateFrom,
-                                         Date agreementDateTo) {
+                                         LocalDate agreementDateFrom,
+                                         LocalDate agreementDateTo) {
         this.personFirstName = personFirstName;
         this.personLastName = personLastName;
         this.agreementDateFrom = agreementDateFrom;
@@ -34,23 +34,4 @@ public class TravelCalculatePremiumRequest {
         return personLastName;
     }
 
-    public void setPersonLastName(String personLastName) {
-        this.personLastName = personLastName;
-    }
-
-    public Date getAgreementDateFrom() {
-        return agreementDateFrom;
-    }
-
-    public void setAgreementDateFrom(Date agreementDateFrom) {
-        this.agreementDateFrom = agreementDateFrom;
-    }
-
-    public Date getAgreementDateTo() {
-        return agreementDateTo;
-    }
-
-    public void setAgreementDateTo(Date agreementDateTo) {
-        this.agreementDateTo = agreementDateTo;
-    }
 }
