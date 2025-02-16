@@ -23,14 +23,13 @@ class DateTimeServiceTest {
     @Test
     void shouldCalculateDaysBetweenDatesPositive() {
         result = dateTimeService.calculateDaysBetweenDates(date1, date2);
-
         assertEquals(35, result);
     }
 
     @Test
     void shouldCalculateDaysBetweenDatesNegative() {
         result = dateTimeService.calculateDaysBetweenDates(date2, date1);
-
         assertEquals(-35, result);
     }
+
 }
