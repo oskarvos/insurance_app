@@ -4,89 +4,114 @@ import org.javaguru.travel.insurance.dto.TravelCalculatePremiumRequest;
 import org.javaguru.travel.insurance.dto.ValidationError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class TravelCalculatePremiumRequestValidatorTest {
 
+    @Mock
     TravelCalculatePremiumRequest request;
+
     TravelCalculatePremiumRequestValidator validator;
 
     @BeforeEach
     void setUp() {
-        request = new TravelCalculatePremiumRequest();
         validator = new TravelCalculatePremiumRequestValidator();
     }
 
     @Test
-    void shouldValidatePersonFirstNameNullListErrorsSize() {
-        request.setPersonFirstName(null);
-        request.setPersonLastName("Ivanov");
-        request.setAgreementDateFrom(LocalDate.now());
-        request.setAgreementDateTo(null);
+    void shouldReturnErrorValidatePersonFirstNameNull() {
+        when(request.getPersonFirstName()).thenReturn(null);
+        when(request.getPersonLastName()).thenReturn("Ivanov");
+        when(request.getAgreementDateFrom()).thenReturn(LocalDate.of(2025, 1, 1));
+        when(request.getAgreementDateTo()).thenReturn(LocalDate.of(2025, 1, 5));
         List<ValidationError> errors = validator.validate(request);
         assertFalse(errors.isEmpty());
-        assertEquals(2, errors.size());
-        assertEquals("personFirstName", errors.get(0).getField());
-        assertEquals("Must not be empty", errors.get(0).getMassage());
+        assertEquals(1, errors.size());
+        assertEquals("personFirstName", errors.getFirst().getField());
+        assertEquals("Must not be empty", errors.getFirst().getMassage());
     }
 
     @Test
-    void shouldValidatePersonFirstLastNameNullListErrorsSize() {
-        request.setPersonFirstName(null);
-        request.setPersonLastName(null);
-        request.setAgreementDateFrom(null);
-        request.setAgreementDateTo(null);
+    void shouldReturnErrorValidatePersonLastNameNull() {
+        when(request.getPersonFirstName()).thenReturn("Ivan");
+        when(request.getPersonLastName()).thenReturn(null);
+        when(request.getAgreementDateFrom()).thenReturn(LocalDate.of(2025, 1, 1));
+        when(request.getAgreementDateTo()).thenReturn(LocalDate.of(2025, 1, 5));
+        List<ValidationError> errors = validator.validate(request);
+        assertFalse(errors.isEmpty());
+        assertEquals(1, errors.size());
+        assertEquals("personLastName", errors.getFirst().getField());
+        assertEquals("Must not be empty", errors.getFirst().getMassage());
+    }
+
+    @Test
+    void shouldReturnErrorValidateAgreementDateFromNull() {
+        when(request.getPersonFirstName()).thenReturn("Ivan");
+        when(request.getPersonLastName()).thenReturn("Ivanov");
+        when(request.getAgreementDateFrom()).thenReturn(null);
+        when(request.getAgreementDateTo()).thenReturn(LocalDate.of(2025, 1, 5));
+        List<ValidationError> errors = validator.validate(request);
+        assertFalse(errors.isEmpty());
+        assertEquals(1, errors.size());
+        assertEquals("agreementDateFrom", errors.getFirst().getField());
+        assertEquals("Must not be empty", errors.getFirst().getMassage());
+    }
+
+    @Test
+    void shouldReturnErrorValidateAgreementDateToNull() {
+        when(request.getPersonFirstName()).thenReturn("Ivan");
+        when(request.getPersonLastName()).thenReturn("Ivanov");
+        when(request.getAgreementDateFrom()).thenReturn(LocalDate.of(2025, 1, 1));
+        when(request.getAgreementDateTo()).thenReturn(null);
+        List<ValidationError> errors = validator.validate(request);
+        assertFalse(errors.isEmpty());
+        assertEquals(1, errors.size());
+        assertEquals("agreementDateTo", errors.getFirst().getField());
+        assertEquals("Must not be empty", errors.getFirst().getMassage());
+    }
+
+    @Test
+    void shouldReturnErrorValidateFieldPersonNull() {
+        when(request.getPersonFirstName()).thenReturn(null);
+        when(request.getPersonLastName()).thenReturn(null);
+        when(request.getAgreementDateFrom()).thenReturn(null);
+        when(request.getAgreementDateTo()).thenReturn(null);
         List<ValidationError> errors = validator.validate(request);
         assertFalse(errors.isEmpty());
         assertEquals(4, errors.size());
-        assertEquals("agreementDateFrom", errors.get(2).getField());
-        assertEquals("Must not be empty", errors.get(3).getMassage());
-
     }
 
     @Test
-    void shouldValidatePersonFirstNameErrorMassage() {
-        request.setPersonFirstName(null);
-        request.setPersonLastName(null);
-        request.setAgreementDateFrom(null);
-        request.setAgreementDateTo(null);
+    void shouldReturnNotErrorValidatePerson() {
+        when(request.getPersonFirstName()).thenReturn("Ivan");
+        when(request.getPersonLastName()).thenReturn("Ivanov");
+        when(request.getAgreementDateFrom()).thenReturn(LocalDate.of(2025, 1, 1));
+        when(request.getAgreementDateTo()).thenReturn(LocalDate.of(2025, 1, 5));
         List<ValidationError> errors = validator.validate(request);
-        assertEquals("agreementDateFrom", errors.get(2).getField());
-    }
-
-    @Test
-    void shouldValidatePersonFirstLastNameListErrorSize() {
-        request.setPersonFirstName("Ivan");
-        request.setPersonLastName("Ivanov");
-        request.setAgreementDateFrom(LocalDate.of(2025, 1, 1));
-        request.setAgreementDateTo(LocalDate.now());
-        List<ValidationError> errors = validator.validate(request);
-        assertEquals(0, errors.size());
-    }
-
-
-    @Test
-    void shouldValidateDateFromFirstDateToNoError() {
-        request.setPersonFirstName("Ivan");
-        request.setPersonLastName("Ivanov");
-        request.setAgreementDateFrom(LocalDate.of(2024, 3, 3));
-        request.setAgreementDateTo(LocalDate.of(2025, 3, 3));
-        List<ValidationError> errors = validator.validate(request);
+        assertTrue(errors.isEmpty());
         assertEquals(0, errors.size());
     }
 
     @Test
-    void shouldValidateDateToFirstDateFromYesError() {
-        request.setPersonFirstName("Ivan");
-        request.setPersonLastName("Ivanov");
-        request.setAgreementDateFrom(LocalDate.of(2025, 3, 3));
-        request.setAgreementDateTo(LocalDate.of(2024, 3, 3));
+    void shouldReturnErrorValidateDateToFirstDateFrom() {
+        when(request.getPersonFirstName()).thenReturn("Ivan");
+        when(request.getPersonLastName()).thenReturn("Ivanov");
+        when(request.getAgreementDateFrom()).thenReturn(LocalDate.of(2025, 1, 1));
+        when(request.getAgreementDateTo()).thenReturn(LocalDate.of(2024, 1, 1));
         List<ValidationError> errors = validator.validate(request);
+        assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
+        assertEquals("agreementDateToFirstAgreementDateFrom", errors.getFirst().getField());
+        assertEquals("DateFrom must be first DateTo", errors.getFirst().getMassage());
     }
 
 }

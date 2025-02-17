@@ -47,9 +47,8 @@ public class TravelCalculatePremiumRequestValidator {
 
     private Optional<ValidationError> validateAgreementDateFromFirstAgreementDateTo(TravelCalculatePremiumRequest request) {
         return (request.getAgreementDateFrom() != null
-                && request.getAgreementDateTo() != null)
-                && (request.getAgreementDateTo().isBefore(request.getAgreementDateFrom())
-                || (request.getAgreementDateFrom().isEqual(request.getAgreementDateTo())))
+                && request.getAgreementDateTo() != null
+                && (request.getAgreementDateTo().isBefore(request.getAgreementDateFrom())))
                 ? Optional.of(new ValidationError("agreementDateToFirstAgreementDateFrom", "DateFrom must be first DateTo"))
                 : Optional.empty();
     }

@@ -2,7 +2,7 @@ package org.javaguru.travel.insurance.core;
 
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumRequest;
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumResponse;
-import org.junit.jupiter.api.BeforeEach;
+import org.javaguru.travel.insurance.dto.ValidationError;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,15 +13,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TravelCalculatePremiumServiceImplTest {
 
     @Mock
-    private DateTimeService dateService;
+    private TravelPremiumUnderwriting underwriting;
+
     @Mock
     private TravelCalculatePremiumRequestValidator requestValidator;
 
@@ -31,52 +31,73 @@ class TravelCalculatePremiumServiceImplTest {
     private TravelCalculatePremiumRequest request;
     private TravelCalculatePremiumResponse response;
 
-    @BeforeEach
-    void setUp() {
-        request = createRequestWithFields();
-        when(dateService.calculateDaysBetweenDates(request.getAgreementDateFrom(), request.getAgreementDateTo())).thenReturn(25L);
-        when(requestValidator.validate(request)).thenReturn(List.of());
-        response = service.calculatePremium(request);
-    }
-
     @Test
     void shouldPopulateResponsePersonLastName() {
+        request = createRequestWithFieldsNotErrors();
+        response = service.calculatePremium(request);
+
         assertEquals("Ivanov", response.getPersonLastName());
     }
 
     @Test
     void shouldPopulateResponsePersonFirstName() {
+        request = createRequestWithFieldsNotErrors();
+        response = service.calculatePremium(request);
+
         assertEquals("Ivan", response.getPersonFirstName());
     }
 
     @Test
     void shouldPopulateResponseAgreementDateFrom() {
-        assertEquals(response.getAgreementDateTo(), request.getAgreementDateTo());
+        request = createRequestWithFieldsNotErrors();
+        response = service.calculatePremium(request);
+
+        assertEquals(response.getAgreementDateFrom(), request.getAgreementDateFrom());
+        assertEquals(LocalDate.of(2025, 2, 17), response.getAgreementDateFrom());
     }
 
     @Test
     void shouldPopulateResponseAgreementDateTo() {
+        request = createRequestWithFieldsNotErrors();
+        response = service.calculatePremium(request);
+
         assertEquals(response.getAgreementDateTo(), request.getAgreementDateTo());
+        assertEquals(LocalDate.of(2025, 2, 19), response.getAgreementDateTo());
     }
 
     @Test
     void shouldPopulateArgumentPriceNotNull() {
+        request = createRequestWithFieldsNotErrors();
+        when(underwriting.premiumCalculateBigDecimal(request)).thenReturn(new BigDecimal(2));
+        response = service.calculatePremium(request);
+
         assertNotNull(response.getAgreementPrice());
     }
 
     @Test
     void shouldCalculateDaysBetweenDate() {
-        BigDecimal actual = BigDecimal.valueOf(25);
-        assertEquals(response.getAgreementPrice(), actual);
+        request = createRequestWithFieldsNotErrors();
+        when(underwriting.premiumCalculateBigDecimal(request)).thenReturn(new BigDecimal(2L));
+        response = service.calculatePremium(request);
+
+        BigDecimal actual = BigDecimal.valueOf(2);
+        assertEquals(actual,response.getAgreementPrice());
     }
 
-    private TravelCalculatePremiumRequest createRequestWithFields() {
+    @Test
+    void shouldReturnListErrorsLengthSize() {
+        var errors = new ValidationError("field", "message");
+        when(requestValidator.validate(request)).thenReturn(List.of(errors));
+        response = service.calculatePremium(request);
+        assertEquals(1, response.getError().size());
+    }
+
+    private TravelCalculatePremiumRequest createRequestWithFieldsNotErrors() {
         var request = new TravelCalculatePremiumRequest();
         request.setPersonFirstName("Ivan");
         request.setPersonLastName("Ivanov");
-        request.setAgreementDateFrom(LocalDate.now());
-        request.setAgreementDateTo(LocalDate.now());
+        request.setAgreementDateFrom(LocalDate.of(2025, 2, 17));
+        request.setAgreementDateTo(LocalDate.of(2025, 2, 19));
         return request;
     }
-
 }

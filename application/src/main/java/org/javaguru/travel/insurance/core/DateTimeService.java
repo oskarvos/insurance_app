@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 @Component
 class DateTimeService {
 
-    long calculateDaysBetweenDates(LocalDate date1, LocalDate date2) {  // считает коллиство дней между датами
+    long calculateDaysBetweenDates(LocalDate date1, LocalDate date2) {  // считает количество дней между датами
         return ChronoUnit.DAYS.between(date1, date2);
     }
 
