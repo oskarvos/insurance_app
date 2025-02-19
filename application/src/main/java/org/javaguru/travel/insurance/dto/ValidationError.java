@@ -9,5 +9,5 @@ import lombok.*;
 public class ValidationError {
 
     private String field;
-    private String massage;
+    private String message;
 }

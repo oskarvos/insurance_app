@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 class CoreResponse {
 
-    private List<ValidationError> error;
+    private List<ValidationError> errors;
 
     public boolean hasErrors() {
-        return error != null && !error.isEmpty();
+        return errors != null && !errors.isEmpty();
     }
 
 }

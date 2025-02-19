@@ -89,7 +89,7 @@ class TravelCalculatePremiumServiceImplTest {
         var errors = new ValidationError("field", "message");
         when(requestValidator.validate(request)).thenReturn(List.of(errors));
         response = service.calculatePremium(request);
-        assertEquals(1, response.getError().size());
+        assertEquals(1, response.getErrors().size());
     }
 
     private TravelCalculatePremiumRequest createRequestWithFieldsNotErrors() {

@@ -37,7 +37,7 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
         assertEquals("personFirstName", errors.getFirst().getField());
-        assertEquals("Must not be empty", errors.getFirst().getMassage());
+        assertEquals("Must not be empty", errors.getFirst().getMessage());
     }
 
     @Test
@@ -50,7 +50,7 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
         assertEquals("personLastName", errors.getFirst().getField());
-        assertEquals("Must not be empty", errors.getFirst().getMassage());
+        assertEquals("Must not be empty", errors.getFirst().getMessage());
     }
 
     @Test
@@ -63,7 +63,7 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
         assertEquals("agreementDateFrom", errors.getFirst().getField());
-        assertEquals("Must not be empty", errors.getFirst().getMassage());
+        assertEquals("Must not be empty", errors.getFirst().getMessage());
     }
 
     @Test
@@ -76,7 +76,7 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
         assertEquals("agreementDateTo", errors.getFirst().getField());
-        assertEquals("Must not be empty", errors.getFirst().getMassage());
+        assertEquals("Must not be empty", errors.getFirst().getMessage());
     }
 
     @Test
@@ -111,7 +111,7 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertFalse(errors.isEmpty());
         assertEquals(1, errors.size());
         assertEquals("agreementDateToFirstAgreementDateFrom", errors.getFirst().getField());
-        assertEquals("DateFrom must be first DateTo", errors.getFirst().getMassage());
+        assertEquals("DateFrom must be first DateTo", errors.getFirst().getMessage());
     }
 
 }
