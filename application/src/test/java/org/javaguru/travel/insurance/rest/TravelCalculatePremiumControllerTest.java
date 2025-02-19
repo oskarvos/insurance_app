@@ -1,5 +1,6 @@
 package org.javaguru.travel.insurance.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,24 +26,24 @@ class TravelCalculatePremiumControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private JsonFileReader jsonFile;
+
     @Test
     void restControllerTest() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : \"Ivan\",\n" +
-                                "\"personLastName\" : \"Ivanov\",\n" +
-                                "\"agreementDateFrom\" : \"2025-02-19\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
+        String requestJson = jsonFile.readJsonFile("rest/TravelCalculatePremiumRequest_success.json");
+        String responseJson = jsonFile.readJsonFile("rest/TravelCalculatePremiumResponse_success.json");
+
+        MvcResult result = mockMvc.perform(post("/insurance/travel/")
+                        .content(requestJson)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("personFirstName", is("Ivan")))
-                .andExpect(jsonPath("personLastName", is("Ivanov")))
-                .andExpect(jsonPath("agreementDateFrom", is("2025-02-19")))
-                .andExpect(jsonPath("agreementDateTo", is("2025-02-20")))
-                .andExpect(jsonPath("agreementPrice", is(1)))
-                .andExpect(jsonPath("errors", nullValue()))
                 .andReturn();
+
+        String responseBodyContent = result.getResponse().getContentAsString();
+
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(responseJson));
     }
 
     @Test
