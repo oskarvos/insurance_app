@@ -1,6 +1,7 @@
 package org.javaguru.travel.insurance.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -30,9 +29,98 @@ class TravelCalculatePremiumControllerTest {
     private JsonFileReader jsonFile;
 
     @Test
-    void restControllerTest() throws Exception {
-        String requestJson = jsonFile.readJsonFile("rest/TravelCalculatePremiumRequest_success.json");
-        String responseJson = jsonFile.readJsonFile("rest/TravelCalculatePremiumResponse_success.json");
+    @DisplayName("request success")
+    void shouldShowNotErrors() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_success.json",
+                "rest/TravelCalculatePremiumResponse_success.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request firstName - null")
+    void shouldShowErrorBadRequestWhenNullFirstName() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_firstName_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_firstName_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request LastName - null")
+    void shouldShowErrorBadRequestWhenNullFirstNameNullLastName() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_LastName_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_LastName_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request DateFrom - null")
+    void shouldShowErrorBadRequestWhenNullDateFrom() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_agreementDateFrom_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_agreementDateFrom_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request DateTo - null")
+    void shouldShowErrorBadRequestWhenNullDateTo() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_agreementDateTo_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_agreementDateTo_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request DateFrom later DateTo - null")
+    void shouldShowErrorBadRequestWhenDateFromLaterDateTo() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_dateTo_lessThen_dateFrom.json",
+                "rest/TravelCalculatePremiumResponse_dateTo_lessThen_dateFrom.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request firstName and lastName - null")
+    void shouldShowErrorBadRequestWhenNullFirstAndLastName() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_first_lastName_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_first_lastName_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request all fields")
+    void shouldShowErrorBadRequestAllField() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_allFields_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_allFields_not_provided.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request DateFrom past")
+    void shouldShowErrorBadRequestDateFromPast() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_agreementDateFrom_past.json",
+                "rest/TravelCalculatePremiumResponse_agreementDateFrom_past.json"
+        );
+    }
+
+    @Test
+    @DisplayName("request DateTo past")
+    void shouldShowErrorBadRequestDateToPast() throws Exception {
+        compare(
+                "rest/TravelCalculatePremiumRequest_agreementDateTo_past.json",
+                "rest/TravelCalculatePremiumResponse_agreementDateTo_past.json"
+        );
+    }
+
+    private void compare(String requestJsonFile, String responseJsonFile) throws Exception {
+        String requestJson = jsonFile.readJsonFile(requestJsonFile);
+        String responseJson = jsonFile.readJsonFile(responseJsonFile);
 
         MvcResult result = mockMvc.perform(post("/insurance/travel/")
                         .content(requestJson)
@@ -44,147 +132,6 @@ class TravelCalculatePremiumControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
         assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(responseJson));
-    }
-
-    @Test
-    void shouldShowErrorBadRequestWhenNullFirstName() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : null,\n" +
-                                "\"personLastName\" : \"Ivanov\",\n" +
-                                "\"agreementDateFrom\" : \"2025-02-19\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("personFirstName")))
-                .andExpect(jsonPath("errors[0].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors", is(hasSize(1))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
-    }
-
-    @Test
-    void shouldShowErrorBadRequestWhenNullFirstNameNullLastName() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : null,\n" +
-                                "\"personLastName\" : \"\",\n" +
-                                "\"agreementDateFrom\" : \"2025-02-19\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("personFirstName")))
-                .andExpect(jsonPath("errors[0].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors[1].field", is("personLastName")))
-                .andExpect(jsonPath("errors[1].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors", is(hasSize(2))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
-    }
-
-    @Test
-    void shouldShowErrorBadRequestWhenNullLastName() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : \"Ivan\",\n" +
-                                "\"personLastName\" : null,\n" +
-                                "\"agreementDateFrom\" : \"2025-02-19\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("personLastName")))
-                .andExpect(jsonPath("errors[0].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors", is(hasSize(1))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
-    }
-
-    @Test
-    void shouldShowErrorBadRequestWhenNullDateFrom() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : \"Ivan\",\n" +
-                                "\"personLastName\" : \"Ivanov\",\n" +
-                                "\"agreementDateFrom\" : \"\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("agreementDateFrom")))
-                .andExpect(jsonPath("errors[0].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors", is(hasSize(1))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
-    }
-
-    @Test
-    void shouldShowErrorBadRequestWhenNullDateTo() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : \"Ivan\",\n" +
-                                "\"personLastName\" : \"Ivanov\",\n" +
-                                "\"agreementDateFrom\" : \"2025-02-19\",\n" +
-                                "\"agreementDateTo\" : \"\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("agreementDateTo")))
-                .andExpect(jsonPath("errors[0].message", is("Must not be empty")))
-                .andExpect(jsonPath("errors", is(hasSize(1))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
-    }
-
-
-    @Test
-    void shouldShowErrorBadRequestWhenDateFromLaterDateTo() throws Exception {
-        mockMvc.perform(post("/insurance/travel/")
-                        .content("{" +
-                                "\"personFirstName\" : \"Ivan\",\n" +
-                                "\"personLastName\" : \"Ivanov\",\n" +
-                                "\"agreementDateFrom\" : \"2025-02-21\",\n" +
-                                "\"agreementDateTo\" : \"2025-02-20\"\n" +
-                                "}")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("errors[0].field", is("agreementDateToFirstAgreementDateFrom")))
-                .andExpect(jsonPath("errors[0].message", is("DateFrom must be first DateTo")))
-                .andExpect(jsonPath("errors", is(hasSize(1))))
-                .andExpect(jsonPath("errors", is(notNullValue())))
-                .andExpect(jsonPath("personFirstName", is(nullValue())))
-                .andExpect(jsonPath("personLastName", is(nullValue())))
-                .andExpect(jsonPath("agreementDateFrom", is(nullValue())))
-                .andExpect(jsonPath("agreementDateTo", is(nullValue())))
-                .andExpect(jsonPath("agreementPrice", is(nullValue())))
-                .andReturn();
     }
 
 }

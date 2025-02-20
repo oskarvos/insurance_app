@@ -1,8 +1,8 @@
 {
   "errors": [
     {
-      "field": "personLastName",
-      "message": "Must not be empty"
+      "field": "agreementDateFromPast",
+      "message": "DateFrom not must be past"
     }
   ],
   "personFirstName": null,
