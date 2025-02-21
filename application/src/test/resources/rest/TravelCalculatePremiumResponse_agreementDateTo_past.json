@@ -1,12 +1,12 @@
 {
   "errors": [
     {
-      "field": "agreementDateToPast",
-      "message": "DateTo not must be past"
-    },
-    {
       "field": "agreementDateFromPast",
       "message": "DateFrom not must be past"
+    },
+    {
+      "field": "agreementDateToPast",
+      "message": "DateTo not must be past"
     }
   ],
   "personFirstName": null,
