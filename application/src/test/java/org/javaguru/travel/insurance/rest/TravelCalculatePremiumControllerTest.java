@@ -133,5 +133,4 @@ class TravelCalculatePremiumControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(responseJson));
     }
-
 }
