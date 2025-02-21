@@ -1,8 +1,7 @@
-package org.javaguru.travel.insurance.core;
+package org.javaguru.travel.insurance.core.validations;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.javaguru.travel.insurance.core.validations.TravelRequestValidate;
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumRequest;
 import org.javaguru.travel.insurance.dto.ValidationError;
 import org.springframework.stereotype.Component;
@@ -13,10 +12,11 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class TravelCalculatePremiumRequestValidator {
+class TravelCalculatePremiumRequestValidatorImpl implements TravelCalculatePremiumRequestValidator {
 
     private final List<TravelRequestValidate> travelRequestValidations;
 
+    @Override
     public List<ValidationError> validate(TravelCalculatePremiumRequest request) {
         return travelRequestValidations.stream()
                 .map(travelRequestValidate -> travelRequestValidate.executeValidate(request))

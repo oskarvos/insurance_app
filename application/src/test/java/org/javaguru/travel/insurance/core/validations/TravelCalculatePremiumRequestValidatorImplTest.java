@@ -1,6 +1,5 @@
-package org.javaguru.travel.insurance.core;
+package org.javaguru.travel.insurance.core.validations;
 
-import org.javaguru.travel.insurance.core.validations.TravelRequestValidate;
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumRequest;
 import org.javaguru.travel.insurance.dto.ValidationError;
 import org.junit.jupiter.api.Test;
@@ -18,13 +17,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TravelCalculatePremiumRequestValidatorTest {
+class TravelCalculatePremiumRequestValidatorImplTest {
 
     @Mock
     TravelCalculatePremiumRequest request;
 
     @InjectMocks
-    TravelCalculatePremiumRequestValidator requestValidator;
+    TravelCalculatePremiumRequestValidatorImpl requestValidator;
 
     @Test
     void shouldShowValidateErrors() {
@@ -42,7 +41,6 @@ class TravelCalculatePremiumRequestValidatorTest {
         assertEquals(2, errors.size());
     }
 
-
     @Test
     void shouldShowNoErrors() {
         TravelRequestValidate requestValidate1 = mock(TravelRequestValidate.class);
@@ -58,4 +56,5 @@ class TravelCalculatePremiumRequestValidatorTest {
 
         assertTrue(errors.isEmpty());
     }
+
 }

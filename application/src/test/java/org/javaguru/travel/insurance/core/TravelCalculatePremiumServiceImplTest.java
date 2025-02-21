@@ -1,5 +1,6 @@
 package org.javaguru.travel.insurance.core;
 
+import org.javaguru.travel.insurance.core.validations.TravelCalculatePremiumRequestValidator;
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumRequest;
 import org.javaguru.travel.insurance.dto.TravelCalculatePremiumResponse;
 import org.javaguru.travel.insurance.dto.ValidationError;
@@ -100,4 +101,5 @@ class TravelCalculatePremiumServiceImplTest {
         request.setAgreementDateTo(LocalDate.of(2025, 2, 19));
         return request;
     }
+
 }

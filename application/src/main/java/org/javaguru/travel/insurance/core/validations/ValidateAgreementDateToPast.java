@@ -12,10 +12,9 @@ class ValidateAgreementDateToPast implements TravelRequestValidate {
 
     @Override
     public Optional<ValidationError> executeValidate(TravelCalculatePremiumRequest request) {
-        return (request.getAgreementDateFrom() != null
-                && request.getAgreementDateTo() != null
-                && (request.getAgreementDateFrom().isBefore(LocalDate.now())))
-                ? Optional.of(new ValidationError("agreementDateFromPast", "DateFrom not must be past"))
+        return (request.getAgreementDateTo() != null
+                && (request.getAgreementDateTo().isBefore(LocalDate.now())))
+                ? Optional.of(new ValidationError("agreementDateToPast", "DateTo not must be past"))
                 : Optional.empty();
     }
 
