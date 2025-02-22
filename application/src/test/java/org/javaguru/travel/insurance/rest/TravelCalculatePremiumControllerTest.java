@@ -50,8 +50,8 @@ class TravelCalculatePremiumControllerTest {
     @DisplayName("request LastName - null")
     void shouldShowErrorBadRequestWhenNullFirstNameNullLastName() throws Exception {
         compare(
-                "rest/TravelCalculatePremiumRequest_LastName_not_provided.json",
-                "rest/TravelCalculatePremiumResponse_LastName_not_provided.json"
+                "rest/TravelCalculatePremiumRequest_lastName_not_provided.json",
+                "rest/TravelCalculatePremiumResponse_lastName_not_provided.json"
         );
     }
 
