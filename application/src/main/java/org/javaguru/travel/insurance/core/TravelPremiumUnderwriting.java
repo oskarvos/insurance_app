@@ -13,10 +13,10 @@ class TravelPremiumUnderwriting {
 
     private final DateTimeService dateTimeService;
 
+    // устанавливаем расчетное время создаем BigDecimal в днях
     BigDecimal premiumCalculateBigDecimal(TravelCalculatePremiumRequest request) {
         return new BigDecimal(dateTimeService.calculateDaysBetweenDates(
                 request.getAgreementDateFrom(),
-                request.getAgreementDateTo())); // устанавливаем расчетное время создаем BigDecimal в д нях
+                request.getAgreementDateTo()));
     }
-
 }

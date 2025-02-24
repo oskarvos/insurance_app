@@ -24,5 +24,4 @@ class TravelCalculatePremiumRequestValidatorImpl implements TravelCalculatePremi
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
-
 }

@@ -14,8 +14,8 @@ class ValidateAgreementDateFromFirstDateTo implements TravelRequestValidate {
         return (request.getAgreementDateFrom() != null
                 && request.getAgreementDateTo() != null
                 && (request.getAgreementDateTo().isBefore(request.getAgreementDateFrom())))
-                ? Optional.of(new ValidationError("agreementDateToFirstAgreementDateFrom", "DateFrom must be first DateTo"))
+                ? Optional.of(new ValidationError("agreementDateToFirstAgreementDateFrom",
+                "DateFrom must be first DateTo"))
                 : Optional.empty();
     }
-
 }

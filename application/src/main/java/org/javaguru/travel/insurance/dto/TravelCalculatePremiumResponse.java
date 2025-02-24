@@ -29,5 +29,4 @@ public class TravelCalculatePremiumResponse extends CoreResponse {
     public TravelCalculatePremiumResponse(List<ValidationError> errors) {
         super(errors);
     }
-
 }

@@ -15,5 +15,4 @@ class ValidatePersonLastName implements TravelRequestValidate {
                 ? Optional.of(new ValidationError("personLastName", "Must not be empty"))
                 : Optional.empty();
     }
-
 }

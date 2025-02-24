@@ -12,8 +12,8 @@ class ValidateAgreementDateTo implements TravelRequestValidate {
     @Override
     public Optional<ValidationError> executeValidate(TravelCalculatePremiumRequest request) {
         return (request.getAgreementDateTo() == null)
-                ? Optional.of(new ValidationError("agreementDateTo", "Must not be empty"))
+                ? Optional.of(new ValidationError("agreementDateTo",
+                "Must not be empty"))
                 : Optional.empty();
     }
-
 }

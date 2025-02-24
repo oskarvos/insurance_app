@@ -38,5 +38,4 @@ class TravelCalculatePremiumServiceImpl implements TravelCalculatePremiumService
         response.setAgreementPrice(premiumUnderwriting.premiumCalculateBigDecimal(request));
         return response;
     }
-
 }

@@ -18,5 +18,4 @@ class CoreResponse {
     public boolean hasErrors() {
         return errors != null && !errors.isEmpty();
     }
-
 }
