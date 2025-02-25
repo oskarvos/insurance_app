@@ -1,0 +1,41 @@
+create - создать
+calculate - вычислить
+find - находить
+search - поиск
+compare - сравнивать
+increment - прирост (приращение, увеличение)
+count - подсчет
+scoring - подсчет очков
+won - выйграл
+is - является
+take - взять
+make - совершить
+show - показать
+
+elapsed - прошло (затрачено)
+later - позже
+less - меньше
+more - более (больше)
+from to - от до
+from - от (из, с)
+to - к (в)
+passed - прошла (дата)
+must be - должна быть
+
+Empty - пусто
+isEmpty - пустой
+
+when - при
+
+correct - правильный
+unique - уникальный
+value - значение
+title - заголовок
+type - тип
+old value - старое значение
+weight - масса(вес)
+score - счет (количество очков)
+
+
+-Xmx2048m
+

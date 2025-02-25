@@ -1,4 +1,2 @@
 stateless - состояние
 stateful - без сохранения состояния
-
-createRequestWithFields - создать запрос с полями
