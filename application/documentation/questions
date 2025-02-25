@@ -1,4 +1,6 @@
-student_oleg_oskar/src/main/java/org/javaguru/travel/insurance/core/TravelPremiumUnderwriting.java
+1. student_oleg_oskar/src/main/java/org/javaguru/travel
+/insurance/core/TravelPremiumUnderwriting.java
+
 почему не проходил post пока не указал поле final
 что происходит под капотом?
 
